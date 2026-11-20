@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meu perfil</title>
+<style>
+  :root{
+    --fundo:#000000;
+    --card:#999999bd;
+    --card-baixo:#646464e0;
+    --texto:#ffffff;
+    --destaque:#000000;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:var(--fundo);padding:20px;
+    font-family:'Helvetica Neue',Arial,sans-serif;color:var(--texto);
+  }
+  .card{width:100%;max-width:420px;background:var(--card);border-radius:28px;overflow:hidden}
+
+  .player{display:flex;gap:16px;padding:20px;align-items:flex-start}
+  .capa{width:96px;height:96px;border-radius:18px;flex-shrink:0;
+        background:#b9a59a center/cover no-repeat}
+  .info{flex:1;min-width:0;padding-top:8px}
+  .musica{font-size:17px;font-weight:500}
+  .artista{font-size:16px;font-weight:300;opacity:.9;margin-top:2px}
+  .progresso{height:1px;background:rgba(255,255,255,.5);margin-top:16px;position:relative}
+  .progresso span{position:absolute;left:0;top:0;height:1px;width:18%;background:#fff}
+  .tempo{display:flex;justify-content:space-between;font-size:13px;margin-top:8px;opacity:.9}
+  .spotify{width:34px;height:34px;flex-shrink:0;margin:14px 6px 0 0}
+
+  .painel{max-height:0;opacity:0;overflow:hidden;
+          transition:max-height .5s ease,opacity .4s ease;padding:0 20px}
+  .painel.aberto{max-height:600px;opacity:1;padding:6px 20px 22px}
+  .painel-conteudo{display:flex;gap:14px}
+  .perfil{width:96px;flex-shrink:0;font-size:15px;line-height:1.35;opacity:.95}
+  .coracao{width:40px;height:40px;border-radius:50%;background:#fff;
+           display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+  .coracao svg{width:20px;height:20px;fill:var(--destaque)}
+  .perfil .nome{display:inline-block;border-bottom:3px solid var(--destaque);padding-bottom:2px;margin-bottom:4px}
+  .textos{flex:1;font-size:15px;line-height:1.5}
+  .textos p{padding:3px 0;border-bottom:2px solid #fff}
+  .textos b{font-weight:700;margin-right:4px}
+
+  .galeria{display:flex;justify-content:center;gap:12px;padding:20px 16px;background:var(--card-baixo)}
+  .thumb{width:calc((100% - 36px)/4);aspect-ratio:1;border-radius:16px;border:0;cursor:pointer;
+         background:#a99 center/cover no-repeat;transition:transform .2s,box-shadow .2s;padding:0}
+  .thumb:active{transform:scale(.94)}
+  .thumb.ativa{box-shadow:0 0 0 3px #fff}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="player">
+    <div class="capa" id="capa"></div>
+    <div class="info">
+      <div class="musica" id="musica">Leave With Me</div>
+      <div class="artista" id="artista">LISA</div>
+      <div class="progresso"><span></span></div>
+      <div class="tempo"><span>0:21</span><span>2:30</span></div>
+    </div>
+    <svg class="spotify" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#fff"/>
+      <g fill="none" stroke="#cfc9c0" stroke-linecap="round">
+        <path d="M5.5 9.2c4.2-1.2 8.6-.9 12.4 1.2" stroke-width="2"/>
+        <path d="M6.2 12.5c3.5-1 7-.7 10.2 1" stroke-width="1.7"/>
+        <path d="M6.9 15.5c2.8-.8 5.4-.5 7.9.8" stroke-width="1.5"/></g></svg>
+  </div>
+
+  <div class="painel" id="painel">
+    <div class="painel-conteudo">
+      <div class="perfil">
+        <div class="coracao"><svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.3 3 5 6.3 5c1.9 0 3.5 1 4.5 2.5h.4C12.2 6 13.8 5 15.7 5 19 5 21.100 8.3 21.600 11.700 19.500 16.400 12 21 12 21z"/></svg></div>
+        <span class="nome" id="nome"></span><br>
+        <span id="detalhe"></span>
+      </div>
+      <div class="textos" id="textos"></div>
+    </div>
+  </div>
+
+  <div class="galeria" id="galeria"></div>
+</div>
+
+<script>
+const CONFIG = {
+  cores: {
+    fundo:    "#000000",
+    card:     "#999999bd",
+    cardBaixo:"#646464e0",
+    texto:    "#ffffff",
+    destaque: "#000000"
+  },
+
+  capa: "imagens/capa.jpg",
+
+  itens: [
+    { img:"imagens/foto1.jpg", cor:"#d9b99b", titulo:"SCUBIDU", detalhe:"2007 - eng+-, pt & esp. she/her",
+      textos:[["byf","sou bem ativa e respondo rápido quando consigo."],
+              ["dfi","preconceito, grosseria e piadas insensíveis e hater da Lisa e da RedBull."]] },
+    { img:"imagens/foto2.jpg", cor:"#b5483f", titulo:"Gostos", detalhe:"GTA 6 and Scooby-Doo",
+      textos:[["jogos","Ghost of Tsushima, LEGOs, GTAs, Jogo de corrida e Fortnite."],
+              ["filmes/séries","Batman, The Mentalist, Moon Knight, Ninjago, Teens Titans, The Body, Regular Show, Scooby-Doo."]] },
+    { img:"imagens/foto3.jpg", cor:"#c9a96e", titulo:"Playlist", detalhe:"músicas do momento",
+      textos:[["ouvindo","Leave With Me, LISA."],
+              ["mood","aconchegante, tranquila, dia de chuva."]] },
+    { img:"imagens/foto4.jpg", cor:"#8a3a3a", titulo:"naosei", detalhe:"",
+      textos:[["insta","@btmwalker"],
+              ["te amo pessoa que ta lendo <3", "<3 <3"]] }
+  ]
+};
+
+const r = document.documentElement.style, c = CONFIG.cores;
+r.setProperty('--fundo', c.fundo);
+r.setProperty('--card', c.card);
+r.setProperty('--card-baixo', c.cardBaixo);
+r.setProperty('--texto', c.texto);
+r.setProperty('--destaque', c.destaque);
+
+const capa = document.getElementById('capa');
+if (CONFIG.capa) capa.style.backgroundImage = `url(${CONFIG.capa})`;
+
+const galeria = document.getElementById('galeria');
+const painel  = document.getElementById('painel');
+let atual = -1;
+
+CONFIG.itens.forEach((item, i) => {
+  const b = document.createElement('button');
+  b.className = 'thumb';
+  b.style.backgroundColor = item.cor;
+  if (item.img) b.style.backgroundImage = `url(${item.img})`;
+  b.setAttribute('aria-label', item.titulo);
+  b.onclick = () => abrir(i);
+  galeria.appendChild(b);
+});
+
+function abrir(i){
+  const thumbs = galeria.children;
+  if (atual === i){
+    painel.classList.remove('aberto');
+    thumbs[i].classList.remove('ativa');
+    atual = -1; return;
+  }
+  const item = CONFIG.itens[i];
+  document.getElementById('nome').textContent = item.titulo;
+  document.getElementById('detalhe').textContent = item.detalhe;
+  document.getElementById('textos').innerHTML =
+    item.textos.map(t => `<p><b>${t[0]}</b>${t[1]}</p>`).join('');
+  [...thumbs].forEach(t => t.classList.remove('ativa'));
+  thumbs[i].classList.add('ativa');
+  painel.classList.add('aberto');
+  atual = i;
+}
+</script>
+</body>
+</html>
